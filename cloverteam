@@ -17,7 +17,7 @@ local function Validate(key)
     HWID = Generate()
     
     if not Database[key] then
-        game.Players.LocalPlayer:Kick("❌ Invalid Key")
+        game.Players.LocalPlayer:Kick("You are not Whitelisted.")
         return false
     end
     
@@ -33,14 +33,14 @@ local function Validate(key)
     
     local valid = isfile(key..".hwid") and readfile(key..".hwid") == HWID
     if not valid then
-        game.Players.LocalPlayer:Kick("⚠️ HWID Changed")
+        game.Players.LocalPlayer:Kick("You are not Whitelisted.")
     end
     return valid
 end
 
 if _G.key and Validate(_G.key) then
-    print("✅ Whitelisted")
+    print("Whitelisted, Loading Script...")
     -- Load your script here
 else
-    game.Players.LocalPlayer:Kick("🚫 Access Denied")
+    game.Players.LocalPlayer:Kick("You are not Whitelisted.")
 end
