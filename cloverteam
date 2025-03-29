@@ -1,10 +1,11 @@
+--// C.Keysystem
 local Database = loadstring(game:HttpGet("https://pastebin.com/raw/7iJNJ6L0"))()
 local HWID
 
 local function Generate()
     local components = {
         game:GetService("Players").LocalPlayer.UserId,
-        settings().Diagnostics:GetMachineId(),
+        game:GetService("PlatformService"):GetMachineId(), -- Updated method
         os.time(),
         math.random(1,1e9)
     }
@@ -38,6 +39,7 @@ end
 
 if _G.key and Validate(_G.key) then
     print("Key Valid, Loading Script!")
+    -- YOUR SCRIPT LOADS HERE
 else
     game.Players.LocalPlayer:Kick("Key Invalid, Access Denied!")
 end
