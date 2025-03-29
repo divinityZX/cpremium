@@ -1,4 +1,3 @@
---//C.Keysystem
 local Database = loadstring(game:HttpGet("https://pastebin.com/raw/7iJNJ6L0"))()
 local HWID
 
@@ -17,15 +16,20 @@ local function Validate(key)
     HWID = Generate()
     
     if not Database[key] then
-        game.Players.LocalPlayer:Kick("Not Whitelisted.") 
+        game.Players.LocalPlayer:Kick("Not Whitelisted.")
         return false
     end
     
     if Database[key] == "" then
-        writefile(key..".hwid", HWID)
-        local http = (syn and syn.request) or (http and http.request) or request
-        if http then
-            http({
+        if writefile then
+            writefile(key..".hwid", HWID)
+        else
+            return false 
+        end
+        
+        local req = (syn and syn.request) or http_request or fluxus_request or request
+        if req then
+            req({
                 Url = "https://discord.com/api/webhooks/1355522134465577160/YTDmXZIdP748QHq8K21k0CHJgPbKqY_zbYQQqfbwnsQ11MlJMMQuIVKz2b2FT_kiC_Rm",
                 Method = "POST",
                 Body = "Key="..key.."&HWID="..HWID
@@ -34,16 +38,16 @@ local function Validate(key)
         return true
     end
     
-    local valid = isfile(key..".hwid") and readfile(key..".hwid") == HWID
+    local valid = readfile and isfile(key..".hwid") and readfile(key..".hwid") == HWID
     if not valid then
-        game.Players.LocalPlayer:Kick("Not Whitelisted.") 
+        game.Players.LocalPlayer:Kick("Not Whitelisted.")
     end
     return valid
 end
 
 if _G.key and Validate(_G.key) then
-    print("Whitelisted, Launching Script...") 
-    print("Bomboclat")
+    print("Whitelisted, Launching Script...")
+    print("WOW")
 else
-    game.Players.LocalPlayer:Kick("Not Whitelisted.") -
+    game.Players.LocalPlayer:Kick("Not Whitelisted.")
 end
