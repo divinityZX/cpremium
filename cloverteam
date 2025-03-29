@@ -1,17 +1,16 @@
---// C.Keysystem
 local Database = loadstring(game:HttpGet("https://pastebin.com/raw/7iJNJ6L0"))()
 local HWID
 
 local function Generate()
-    
+    -- Universal identifier without HashService
     local components = {
         game:GetService("Players").LocalPlayer.UserId,
         game.PlaceId,
         tostring(tick()),
-        math.random(1,1e9),
+        math.random(1, 1e9),
         game:GetService("HttpService"):GenerateGUID(false)
     }
-    return game:GetService("HashService"):ComputeSHA256(table.concat(components,"|"))
+    return string.gsub(table.concat(components, "|"), "%W", "") -- Remove non-alphanumeric chars
 end
 
 local function Validate(key)
