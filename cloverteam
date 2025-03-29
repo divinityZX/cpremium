@@ -1,3 +1,4 @@
+
 local Database = loadstring(game:HttpGet("https://pastebin.com/raw/7iJNJ6L0"))()
 local HWID
 
