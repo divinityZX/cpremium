@@ -5,8 +5,8 @@ local HWID
 local function Generate()
     local components = {
         game:GetService("Players").LocalPlayer.UserId,
-        game:GetService("PlatformService"):GetMachineId(), -- Updated method
-        os.time(),
+        game:GetService("Stats"):GetMachineId(),
+        tostring(os.clock()),
         math.random(1,1e9)
     }
     return game:GetService("HashService"):ComputeSHA256(table.concat(components,"|"))
@@ -16,7 +16,7 @@ local function Validate(key)
     HWID = Generate()
     
     if not Database[key] then
-        game.Players.LocalPlayer:Kick("Key Invalid")
+        game.Players.LocalPlayer:Kick("You are not Whitelisted.") -- Kick added here
         return false
     end
     
@@ -32,14 +32,14 @@ local function Validate(key)
     
     local valid = isfile(key..".hwid") and readfile(key..".hwid") == HWID or Database[key] == HWID
     if not valid then
-        game.Players.LocalPlayer:Kick("HWID Mismatch")
+        game.Players.LocalPlayer:Kick("You are not Whitelisted.")
     end
     return valid
 end
 
 if _G.key and Validate(_G.key) then
-    print("Key Valid, Loading Script!")
-    -- YOUR SCRIPT LOADS HERE
+    print("Whitelisted, Loading Script...")
+    print("YAY!")
 else
-    game.Players.LocalPlayer:Kick("Key Invalid, Access Denied!")
+    game.Players.LocalPlayer:Kick("You are not Whitelisted.") 
 end
