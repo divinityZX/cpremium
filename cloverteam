@@ -1,9 +1,8 @@
-
+--//C.Keysystem
 local Database = loadstring(game:HttpGet("https://pastebin.com/raw/7iJNJ6L0"))()
 local HWID
 
 local function Generate()
-    
     local components = {
         game:GetService("Players").LocalPlayer.UserId,
         game.PlaceId,
@@ -11,37 +10,40 @@ local function Generate()
         math.random(1, 1e9),
         game:GetService("HttpService"):GenerateGUID(false)
     }
-    return string.gsub(table.concat(components, "|"), "%W", "") 
+    return string.gsub(table.concat(components, "|"), "%W", "")
 end
 
 local function Validate(key)
     HWID = Generate()
     
     if not Database[key] then
-        game.Players.LocalPlayer:Kick("You are not Whitelisted.")
+        game.Players.LocalPlayer:Kick("Not Whitelisted.") 
         return false
     end
     
     if Database[key] == "" then
         writefile(key..".hwid", HWID)
-        syn.request({
-            Url = "https://discord.com/api/webhooks/1355522134465577160/YTDmXZIdP748QHq8K21k0CHJgPbKqY_zbYQQqfbwnsQ11MlJMMQuIVKz2b2FT_kiC_Rm",
-            Method = "POST",
-            Body = "Key="..key.."&HWID="..HWID
-        })
+        local http = (syn and syn.request) or (http and http.request) or request
+        if http then
+            http({
+                Url = "https://discord.com/api/webhooks/1355522134465577160/YTDmXZIdP748QHq8K21k0CHJgPbKqY_zbYQQqfbwnsQ11MlJMMQuIVKz2b2FT_kiC_Rm",
+                Method = "POST",
+                Body = "Key="..key.."&HWID="..HWID
+            })
+        end
         return true
     end
     
     local valid = isfile(key..".hwid") and readfile(key..".hwid") == HWID
     if not valid then
-        game.Players.LocalPlayer:Kick("You are not Whitelisted.")
+        game.Players.LocalPlayer:Kick("Not Whitelisted.") 
     end
     return valid
 end
 
 if _G.key and Validate(_G.key) then
-    print("Whitelisted, Loading Script...")
-    print("Thanks, Purchaser!")
+    print("Whitelisted, Launching Script...") 
+    print("Bomboclat")
 else
-    game.Players.LocalPlayer:Kick("You are not Whitelisted.")
+    game.Players.LocalPlayer:Kick("Not Whitelisted.") -
 end
