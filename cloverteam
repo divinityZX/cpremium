@@ -1,0 +1,43 @@
+local Database = loadstring(game:HttpGet("https://pastebin.com/raw/7iJNJ6L0"))()
+local HWID
+
+local function Generate()
+    local components = {
+        game:GetService("Players").LocalPlayer.UserId,
+        settings().Diagnostics:GetMachineId(),
+        os.time(),
+        math.random(1,1e9)
+    }
+    return game:GetService("HashService"):ComputeSHA256(table.concat(components,"|"))
+end
+
+local function Validate(key)
+    HWID = Generate()
+    
+    if not Database[key] then
+        game.Players.LocalPlayer:Kick("Key Invalid")
+        return false
+    end
+    
+    if Database[key] == "" then
+        writefile(key..".hwid", HWID)
+        syn.request({
+            Url = "https://discord.com/api/webhooks/1355522134465577160/YTDmXZIdP748QHq8K21k0CHJgPbKqY_zbYQQqfbwnsQ11MlJMMQuIVKz2b2FT_kiC_Rm",
+            Method = "POST",
+            Body = "Key="..key.."&HWID="..HWID
+        })
+        return true
+    end
+    
+    local valid = isfile(key..".hwid") and readfile(key..".hwid") == HWID or Database[key] == HWID
+    if not valid then
+        game.Players.LocalPlayer:Kick("HWID Mismatch")
+    end
+    return valid
+end
+
+if _G.key and Validate(_G.key) then
+    print("Key Valid, Loading Script!")
+else
+    game.Players.LocalPlayer:Kick("Key Invalid, Access Denied!")
+end
